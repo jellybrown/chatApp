@@ -1,0 +1,10 @@
+.chatPage {
+  display: flex;
+  height: 100vh;
+}
+.side {
+  width: 300px;
+}
+.main {
+  flex: 1;
+}
