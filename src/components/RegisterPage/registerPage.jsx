@@ -32,9 +32,10 @@ const RegisterPage = (props) => {
                 image: createUser.user.photoURL
             })
             
-            history.push("/login");
+            
             console.log(createUser);
-            return () => setLoading(false);
+            setLoading(false);
+            history.push("/login");
         } catch(error) {
             setLoading(false);
             SetErrorSubmit(error.message);

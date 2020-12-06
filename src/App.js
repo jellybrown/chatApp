@@ -15,9 +15,9 @@ function App() {
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        console.log(user);
         history.push('/');
         dispatch(saveUser(user));
+        console.log(user);
       } else {
         history.push('/login');
       }

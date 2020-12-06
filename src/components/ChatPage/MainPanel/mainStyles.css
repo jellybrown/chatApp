@@ -1,0 +1,29 @@
+/* mainPanel */
+.messageHeader {
+  border: 1px solid #ddd;
+}
+
+.messages {
+  width: 100%;
+  margin: 0 auto;
+  height: 50vh;
+  padding: 2em;
+  background: #eee;
+}
+
+/* messageForm */
+.formBtn {
+  width: 90%;
+  margin: 0 auto;
+  border: none;
+  margin-top: 2em;
+  padding: 1em 0;
+  color: #fff;
+  font-size: 1.2rem;
+}
+.send {
+  background: #333;
+}
+.upload {
+  background: #ccc;
+}

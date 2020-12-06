@@ -1,4 +1,4 @@
-import { SAVE_USER, SIGN_OUT } from '../actions/type';
+import { CHANGE_IMAGE, SAVE_USER, SIGN_OUT } from '../actions/type';
 
 const initialState = {
   currentUser: null,
@@ -17,6 +17,12 @@ export default function user(state = initialState, action) {
       return {
         ...state,
         currentUser: null,
+        isLoading: false,
+      };
+    case CHANGE_IMAGE:
+      return {
+        ...state,
+        currentUser: { ...state.currentUser, photoURL: action.payload },
         isLoading: false,
       };
     default:

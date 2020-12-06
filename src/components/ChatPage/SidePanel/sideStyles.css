@@ -27,4 +27,42 @@
 .profileImg {
   margin-right: 0.8em;
   width: 40px;
+  height: 40px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.fileInput {
+  display: none;
+}
+
+/* chatRooms */
+.sideChat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sideChat .title {
+  display: flex;
+  align-items: center;
+}
+.sideChat .title span {
+  margin-left: 0.5rem;
+}
+.plusIcon {
+  cursor: pointer;
+}
+
+.chatList {
+  margin: 0.5em 0 0 0;
+  padding: 0;
+}
+.chatList li {
+  list-style: none;
+  margin-left: 1.5em;
+  padding: 0.3em 0 0.3em 0.5em;
+
+  font-size: 1rem;
+  line-height: 1.8rem;
+  cursor: pointer;
+  transition: 0.5s;
 }
