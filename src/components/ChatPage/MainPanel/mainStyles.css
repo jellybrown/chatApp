@@ -9,6 +9,7 @@
   height: 50vh;
   padding: 2em;
   background: #eee;
+  overflow-y: scroll;
 }
 
 /* messageForm */
@@ -26,4 +27,23 @@
 }
 .upload {
   background: #ccc;
+}
+
+/* message */
+.messageList {
+  margin-bottom: 1.2em;
+}
+.messageList img {
+  border-radius: 50%;
+}
+.message .author {
+  font-weight: bold;
+}
+.message .time {
+  font-size: 0.75rem;
+  margin-left: 1em;
+  color: #aaa;
+}
+.message .content {
+  font-size: 0.9rem;
 }

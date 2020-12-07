@@ -6,7 +6,7 @@ import moment from 'moment';
 const Message = ({message, user}) => {
 
     const timeFromNow = timestamp => {
-        moment(timestamp).fromNow();
+      return  moment(timestamp).fromNow();
     }
     
     const isImage = message => {
@@ -14,22 +14,25 @@ const Message = ({message, user}) => {
     }
 
     return (
-        <Media>
+        <Media className="messageList">
           <img
-            width={48}
-            height={48}
+            width={44}
+            height={44}
             className="mr-3"
             src={message.user.image}
             alt={message.user.name}
           />
-          <Media.Body>
-            <h6>{message.user.name}
-            <span>{timeFromNow(message.timestamp)}</span>
+          <Media.Body className="message">
+            <h6>
+              <span className="author">{message.user.name}</span>
+              <span className="time">
+              {timeFromNow(message.timestamp)}
+              </span>
             </h6>
             {isImage(message) ?
             <img style={{ maxWidth: '300px'}} alt="이미지" src={message.image} />    
             :   
-            <p>{message.content}</p>
+            <span className="content">{message.content}</span>
             }   
           </Media.Body>
         </Media>

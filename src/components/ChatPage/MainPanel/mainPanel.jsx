@@ -35,7 +35,7 @@ class MainPanel extends Component {
         
     };
 
-    renderMessage = (messages) => {
+    renderMessage = (messages) => 
         messages.length > 0 &&
         messages.map(message => (
             
@@ -47,7 +47,7 @@ class MainPanel extends Component {
            
         ))
        
-    };
+    ;
 
     render() {
         const { messages } = this.state;
