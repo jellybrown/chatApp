@@ -68,7 +68,7 @@ class MainPanel extends Component {
         this.setState({
             searchResults
         })
-    }
+    };
 
     handleSearchChange = (e) => {
         this.setState({
@@ -78,7 +78,7 @@ class MainPanel extends Component {
         () => this.handleSearchMessages()
         )
          
-    }
+    };
 
     render() {
         const { messages, searchTerm, searchResults } = this.state;
