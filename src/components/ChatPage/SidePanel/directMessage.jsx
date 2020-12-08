@@ -3,13 +3,13 @@ import {HiOutlineChevronDown} from 'react-icons/hi';
 import { connect } from 'react-redux';
 import './sideStyles.css';
 import firebase from '../../../firebase';
-
+import {FaRegEnvelope} from 'react-icons/fa';
 
 class DirectMessage extends Component {
 
     state = {
         userRef: firebase.database().ref("users"),
-        users: ''
+        users: []
     }
 
     componentDidMount() {
@@ -32,13 +32,35 @@ class DirectMessage extends Component {
                 this.setState({ users: usersArray });
             }
         })
-    }
+    };
 
-    renderDirectMessages = () => {
+    getChatRoomId = (userId) => {
+        const currentUserId = this.props.user.uid;
+        return userId > currentUserId ?
+            `${userId}/${currentUserId}` : `${currentUserId}/${userId}`
+    };
 
-    }
+    chageChatRoom = (userId) => {
+        const ChatRoomId = this.getChatRoomId(userId);
+    };
+
+    renderDirectMessages = (users) => 
+        users.length > 0 &&
+        users.map(user => (
+            <li 
+            key={user.uid}
+            className="dmUser"
+            onClick={() => this.chageChatRoom(user.uid)}
+            >
+                <FaRegEnvelope />
+                <span>{user.name}</span>
+            </li>
+        ))
+        
+    
 
     render() {
+        const { users } = this.state;
         return (
             
             <div className="dmChat">
@@ -48,7 +70,7 @@ class DirectMessage extends Component {
                     </div>
                 
                 <ul className="dmList">
-                    {this.renderDirectMessages()}
+                    {this.renderDirectMessages(users)}
                 </ul>
 
             </div>
