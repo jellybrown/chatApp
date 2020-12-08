@@ -1,10 +1,39 @@
 import React, { Component } from 'react';
 import {HiOutlineChevronDown} from 'react-icons/hi';
+import { connect } from 'react-redux';
 import './sideStyles.css';
-
+import firebase from '../../../firebase';
 
 
 class DirectMessage extends Component {
+
+    state = {
+        userRef: firebase.database().ref("users"),
+        users: ''
+    }
+
+    componentDidMount() {
+        if(this.props.user) {
+        this.addUserListners(this.props.user.uid);
+        }   
+        
+    };
+
+    addUserListners = (currentUserId) => {
+        const { userRef } =  this.state;
+        
+        let usersArray = [];
+       userRef.on("child_added", DataSnapshot => {
+            if(currentUserId !== DataSnapshot.key) {
+                let user = DataSnapshot.val();
+                user["uid"] = DataSnapshot.key;
+                user["status"] = "offline";
+                usersArray.push(user);
+                this.setState({ users: usersArray });
+            }
+        })
+    }
+
     renderDirectMessages = () => {
 
     }
@@ -27,4 +56,10 @@ class DirectMessage extends Component {
     }
 }
 
-export default DirectMessage;
+const mapStateToProps = state => {
+    return {
+        user: state.user.currentUser
+    }
+}
+
+export default connect(mapStateToProps)(DirectMessage);
