@@ -10,7 +10,7 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import './mainStyles.css';
 
 
-const MessageHeader = () => {
+const MessageHeader = ({handleSearchChange}) => {
     return (
         <div className="messageHeader">
         <Container 
@@ -29,8 +29,9 @@ const MessageHeader = () => {
                 </InputGroup.Text>
                 </InputGroup.Prepend>
                 <FormControl
-                placeholder="Username"
-                aria-label="Username"
+                onChange={handleSearchChange}
+                placeholder="search"
+                aria-label="search"
                 aria-describedby="basic-addon1"
                 />
             </Col>

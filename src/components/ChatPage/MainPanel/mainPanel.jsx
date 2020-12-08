@@ -10,7 +10,11 @@ class MainPanel extends Component {
     state = {
         messages:[],
         messagesRef :firebase.database().ref('messages'),
-        messagesLoading: true
+        messagesLoading: true,
+        searchTerm: "",
+        searchResults: [],
+        searchLoading: false
+
     }
 
     componentDidMount() {
@@ -48,15 +52,42 @@ class MainPanel extends Component {
         ))
        
     ;
+            
+    handleSearchMessages = () => {
+        const chatRoomMessages = [...this.state.messages];
+        const regex = new RegExp(this.state.searchTerm, "gi");
+        const searchResults = chatRoomMessages.reduce((acc, message) => {
+            if(
+                (message.content && message.content.match(regex)) ||
+                 message.user.name.match(regex)
+             ) {
+                 acc.push(message);
+             }
+             return acc;
+        }, []);
+        this.setState({
+            searchResults
+        })
+    }
+
+    handleSearchChange = (e) => {
+        this.setState({
+            searchTerm: e.target.value,
+            searchLoading: true
+        },
+        () => this.handleSearchMessages()
+        )
+         
+    }
 
     render() {
-        const { messages } = this.state;
+        const { messages, searchTerm, searchResults } = this.state;
 
         return (
             <section className="mainPanel">
-                <MessageHeader />
+                <MessageHeader handleSearchChange={this.handleSearchChange}/>
                 <div className="messages">
-                    {this.renderMessage(messages)}
+                    {searchTerm ? this.renderMessage(searchResults) : this.renderMessage(messages)}
                 </div>
                 <MessageForm />
             </section>
