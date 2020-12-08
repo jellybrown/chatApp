@@ -81,6 +81,7 @@
 .dmList .dmUser {
   list-style: none;
   padding: 0.5em 0;
+  cursor: pointer;
 }
 .dmList .dmUser span {
   margin-left: 1em;

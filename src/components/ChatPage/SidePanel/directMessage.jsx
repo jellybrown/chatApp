@@ -3,13 +3,15 @@ import {HiOutlineChevronDown} from 'react-icons/hi';
 import { connect } from 'react-redux';
 import './sideStyles.css';
 import firebase from '../../../firebase';
-import {FaRegEnvelope} from 'react-icons/fa';
+import {BsPersonFill} from 'react-icons/bs';
+import { setCurrentChatRoom, setPrivateChatRoom } from '../../../redux/actions/chatRoom_action';
 
 class DirectMessage extends Component {
 
     state = {
         userRef: firebase.database().ref("users"),
-        users: []
+        users: [],
+        activeChatRoom: ''
     }
 
     componentDidMount() {
@@ -40,8 +42,19 @@ class DirectMessage extends Component {
             `${userId}/${currentUserId}` : `${currentUserId}/${userId}`
     };
 
-    chageChatRoom = (userId) => {
-        const ChatRoomId = this.getChatRoomId(userId);
+    setActiveChatRoom = (userId) => {
+        this.setState({ activeChatRoom: userId });
+    };
+
+    changeChatRoom = (user) => {
+        const ChatRoomId = this.getChatRoomId(user.uid);
+        const chatRoomData = {
+            id: ChatRoomId,
+            name: user.name
+        };
+        this.props.dispatch(setCurrentChatRoom(chatRoomData));
+        this.props.dispatch(setPrivateChatRoom(true));
+        this.setActiveChatRoom(user.uid);
     };
 
     renderDirectMessages = (users) => 
@@ -50,9 +63,11 @@ class DirectMessage extends Component {
             <li 
             key={user.uid}
             className="dmUser"
-            onClick={() => this.chageChatRoom(user.uid)}
+            onClick={() => this.changeChatRoom(user)}
+            style={{
+                backgroundColor:user.uid === this.state.activeChatRoom &&'rgba(255,255,255,0.2)'  }}
             >
-                <FaRegEnvelope />
+                <BsPersonFill />
                 <span>{user.name}</span>
             </li>
         ))
