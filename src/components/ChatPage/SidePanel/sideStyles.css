@@ -66,3 +66,11 @@
   cursor: pointer;
   transition: 0.5s;
 }
+
+/* directMessage */
+.dmChat {
+  margin-top: 2em;
+}
+.dmChat .title span {
+  margin-left: 0.5em;
+}
