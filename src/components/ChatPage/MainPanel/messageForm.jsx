@@ -50,7 +50,7 @@ const MessageForm = () => {
         } else {
             setLoading(true);
             try {
-                await messageRef.child(chatRoom.id).push().set(createMessage())
+                await messageRef.child(chatRoom.id).push().set(createMessage());
                 setLoading(false);
                 setText('');
                 setErrors([]);
@@ -73,17 +73,31 @@ const MessageForm = () => {
         const file = e.target.files[0];
         const filePath = `/message/public/${file.name}`;
         const metadata = { contentType: mime.lookup(file.name)};
+        setLoading(true);
 
         try {
             let uploadTask = storageRef.child(filePath).put(file, metadata);
-            uploadTask.on("state_changed", UploadTaskSnapshot => {
+            uploadTask.on("state_changed", 
+            UploadTaskSnapshot => {
                 const percentage = Math.round(
                     (UploadTaskSnapshot.bytesTransferred / UploadTaskSnapshot.totalBytes) * 100
                 );
                 setPercentage(percentage);
                 console.log(percentage);
 
-            })
+            },
+            err => { 
+                console.error(err);
+                setLoading(false);
+            },
+            () => {
+                uploadTask.snapshot.ref.getDownloadURL()
+                .then(downloadURL => {
+                    messageRef.child(chatRoom.id).push().set(createMessage(downloadURL));
+                    setLoading(false)
+                });
+            }
+            )
         } catch(error) {
             alert(error);
         }

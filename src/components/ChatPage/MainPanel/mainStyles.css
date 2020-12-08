@@ -33,7 +33,7 @@
 .messageList {
   margin-bottom: 1.2em;
 }
-.messageList img {
+.messageList .mr-3 {
   border-radius: 50%;
 }
 .message .author {
