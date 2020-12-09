@@ -66,7 +66,7 @@ const MessageHeader = ({handleSearchChange}) => {
             </Accordion>
             </Col>
             <Col sm style={{paddingTop: '0.5rem'}}>
-            {chatRoom && chatRoom.createdBy.name}
+            방장
             </Col>
         </Row>
         </Container>

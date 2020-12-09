@@ -17,12 +17,13 @@ const MessageForm = () => {
 
     const chatRoom = useSelector(state => state.chatRoom.currentChatRoom);
     const user = useSelector(state => state.user.currentUser);
+    const isPrivateRoom = useSelector(state => state.chatRoom.isPrivateRoom);
     const imageRef = useRef();
     const storageRef = firebase.storage().ref();
 
     const onChange = (e) => {
         setText(e.target.value);
-    }
+    };
 
     const createMessage = (fileUrl = null) =>  {
         const message = {
@@ -40,7 +41,7 @@ const MessageForm = () => {
             message["content"] = text;
         }
         return message;
-    }
+    };
 
     const messageRef = firebase.database().ref('messages');
     const sendMessage = async () => {
@@ -63,15 +64,23 @@ const MessageForm = () => {
             }
             
         }
-    }
+    };
 
     const onSelectImageRef = () => {
         imageRef.current.click();
-    }
+    };
+
+    const getPath = () => {
+        if(isPrivateRoom) {
+            return `/message/private/${chatRoom.id}`;
+        } else {
+            return `/message/public`;
+        }
+    };
 
     const onUploadImage = (e) => {
         const file = e.target.files[0];
-        const filePath = `/message/public/${file.name}`;
+        const filePath = `${getPath()}/${file.name}`;
         const metadata = { contentType: mime.lookup(file.name)};
         setLoading(true);
 
@@ -102,7 +111,7 @@ const MessageForm = () => {
             alert(error);
         }
 
-    }
+    };
 
 
     return (
