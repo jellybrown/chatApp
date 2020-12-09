@@ -15,7 +15,7 @@ class MainPanel extends Component {
         searchResults: [],
         searchLoading: false
 
-    }
+    };
 
     componentDidMount() {
         const { chatRoom } = this.props;
@@ -35,7 +35,7 @@ class MainPanel extends Component {
                 messagesLoading: false });
             
         });
-        console.log(messageArray);
+        
         
     };
 
@@ -49,8 +49,7 @@ class MainPanel extends Component {
             user={this.props.user}
             />
            
-        ))
-       
+        )) 
     ;
             
     handleSearchMessages = () => {

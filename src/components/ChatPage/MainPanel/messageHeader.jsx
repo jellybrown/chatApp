@@ -8,9 +8,13 @@ import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import { AiOutlineSearch } from 'react-icons/ai';
 import './mainStyles.css';
-
+import { useSelector } from 'react-redux';
 
 const MessageHeader = ({handleSearchChange}) => {
+
+    const chatRoom = useSelector(state => state.chatRoom.currentChatRoom);
+    
+
     return (
         <div className="messageHeader">
         <Container 
@@ -19,7 +23,7 @@ const MessageHeader = ({handleSearchChange}) => {
                 padding: '1em 2em 0 2em'
                 }}>
         <Row style={{marginBottom: '1em' }}>
-            <Col sm={8} style={{ fontSize: '2rem'}}>방 제목</Col>
+            <Col sm={8} style={{ fontSize: '2rem'}}>{chatRoom && chatRoom.name}</Col>
             <Col sm={4} style={{ display: 'flex', alignItems: 'center', justifyContent:'center'}}>
                 <InputGroup.Prepend style={{
                     alignSelf: 'stretch',
@@ -62,7 +66,7 @@ const MessageHeader = ({handleSearchChange}) => {
             </Accordion>
             </Col>
             <Col sm style={{paddingTop: '0.5rem'}}>
-            방장
+            {chatRoom && chatRoom.createdBy.name}
             </Col>
         </Row>
         </Container>
