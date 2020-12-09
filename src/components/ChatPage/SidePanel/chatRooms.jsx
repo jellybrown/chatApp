@@ -5,6 +5,7 @@ import{ HiOutlineChevronDown, HiPlus } from 'react-icons/hi';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Badge from 'react-bootstrap/Badge';
 import firebase from '../../../firebase';
 import { setCurrentChatRoom, setPrivateChatRoom } from '../../../redux/actions/chatRoom_action';
 
@@ -16,9 +17,11 @@ class ChatRooms extends Component {
         name:"",
         description:"",
         chatRoomsRef: firebase.database().ref("chatRooms"),
+        messagesRef: firebase.database().ref("messages"),
         chatRooms: [],
         firstLoad: true,
-        activeChatRoomId: ""
+        activeChatRoomId: "",
+        notifications: []
     };
 
     componentDidMount() {
@@ -42,10 +45,54 @@ class ChatRooms extends Component {
         let chatRoomsArray = [];
         this.state.chatRoomsRef.on("child_added", DataSnapshot => {
             chatRoomsArray.push(DataSnapshot.val());
-            this.setState({ chatRooms: chatRoomsArray }, () => this.setFirstChatRoom());
+            this.setState({ chatRooms: chatRoomsArray }, 
+                () => this.setFirstChatRoom());
+            this.addNotificationListener(DataSnapshot.key);
         })
     };
 
+    addNotificationListener = (chatRoomId) => {
+        this.state.messagesRef.child(chatRoomId).on("value", DataSnapshot => {
+            if(this.props.chatRoom) {
+                this.handleNotification(
+                    chatRoomId,
+                    this.props.chatRoom.id,
+                    this.state.notifications,
+                    DataSnapshot
+                )
+            }
+        })
+    };
+    
+
+    handleNotification = (chatRoomId, currentChatRoomId, notifications, DataSnapshot) => {
+        let lastTotal = 0;
+
+        let index = notifications.findIndex(notification => 
+            notification.id === chatRoomId);
+
+            if(index === -1) {
+                notifications.push({
+                    id: chatRoomId,
+                    total: DataSnapshot.numChildren(),
+                    lastKnownTotal: DataSnapshot.numChildren(),
+                    count: 0
+                })
+            }
+            else {
+                if(chatRoomId !== currentChatRoomId) {
+                    lastTotal = notifications[index].lastKnownTotal;
+
+                    if(DataSnapshot.numChildren() - lastTotal > 0) {
+                        notifications[index].count = DataSnapshot.numChildren() - lastTotal;
+                    }
+
+                }
+
+                notifications[index].total = DataSnapshot.numChildren();
+            }
+            this.setState({ notifications });
+    };
 
     handleClose = () => this.setState({ show: false });
     handleShow = () => this.setState({ show: true });
@@ -95,7 +142,17 @@ class ChatRooms extends Component {
         this.props.dispatch(setCurrentChatRoom(room));
         this.props.dispatch(setPrivateChatRoom(false));
         this.setState({ activeChatRoomId: room.id })
-    }
+    };
+
+    getNotificationCount = (room) => {
+        let count = 0;
+        this.state.notifications.forEach(notification => {
+            if (notification.id === room.id) {
+                count = notification.count;
+            }
+        })
+        if(count > 0) return count;
+    };
 
     render() {
         return (
@@ -117,6 +174,9 @@ class ChatRooms extends Component {
                 style={{ backgroundColor: item.id === this.state.activeChatRoomId && 'rgba(255,255,255,0.2'}}
                 onClick={() => this.changeChatRoom(item)}>
                     {item.name}
+                    <Badge 
+                    style={{ marginLeft: '1em'}}
+                    variant="danger">{this.getNotificationCount(item)}</Badge>
                 </li>
             )}
             </ul>
@@ -165,7 +225,8 @@ class ChatRooms extends Component {
 }
 const mapStateToProps = state => {
     return {
-        user: state.user.currentUser
+        user: state.user.currentUser,
+        chatRoom: state.chatRoom.currentChatRoom
     }
 }
 
