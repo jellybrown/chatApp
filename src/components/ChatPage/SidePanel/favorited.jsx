@@ -3,11 +3,13 @@ import './sideStyles.css';
 import firebase from '../../../firebase';
 import { connect } from 'react-redux';
 import {HiOutlineChevronDown} from 'react-icons/hi';
+import { setCurrentChatRoom, setPrivateChatRoom } from '../../../redux/actions/chatRoom_action';
 
 class Favorited extends Component {
     state = {
         favoritedChatRoom: [],
-        userRef: firebase.database().ref("users")
+        userRef: firebase.database().ref("users"),
+        activeChaRoomId: ''
     };
 
     componentDidMount() {
@@ -41,10 +43,20 @@ class Favorited extends Component {
         });
     };
 
+
+    changeChatRoom = (room) => {
+        this.props.dispatch(setCurrentChatRoom(room));
+        this.props.dispatch(setPrivateChatRoom(false));
+        this.setState({ activeChatRoomId: room.id });
+     
+    };
+
     renderFavorited = (favoritedChatRoom) => (
         favoritedChatRoom.length > 0 && favoritedChatRoom.map(favorited => 
             (<li 
             key={favorited.id}
+            onClick={() => this.changeChatRoom(favorited)}
+            style={{backgroundColor: this.state.activeChatRoomId === favorited.id && 'rgba(255,255,255,0.2)'}}
             >
                 {favorited.name}
             </li>)
