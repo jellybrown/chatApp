@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Container  from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -19,6 +19,26 @@ const MessageHeader = ({handleSearchChange}) => {
     const user = useSelector(state => state.user.currentUser);
     const isPravateRoom = useSelector(state => state.chatRoom.isPravateRoom);
     const userRef = firebase.database().ref("users");
+
+    useEffect(() => {
+        if(chatRoom && user) {
+        addFavoriteListener(chatRoom.id, user.uid);
+    }
+    }, []);
+
+    const addFavoriteListener = (chatRoomId, userId) => {
+        userRef
+        .child(userId)
+        .child("favorited")
+        .once("value")
+        .then(data => {
+            if(data.val() !== null) {
+                const chatRoomIds = Object.keys(data.val());
+                const isAlreadyFavorited = chatRoomIds.includes(chatRoomId);
+                setFavorited(isAlreadyFavorited);
+            }
+        })
+    };
 
     const handleFavorite = () => {
         
@@ -42,7 +62,7 @@ const MessageHeader = ({handleSearchChange}) => {
             });
             setFavorited(isFavorited => !isFavorited);
     }
-
+}
     return (
         <div className="messageHeader">
         <Container 
