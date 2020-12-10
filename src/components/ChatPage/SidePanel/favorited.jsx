@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './sideStyles.css';
 import firebase from '../../../firebase';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
+import {HiOutlineChevronDown} from 'react-icons/hi';
 
 class Favorited extends Component {
     state = {
@@ -40,11 +41,28 @@ class Favorited extends Component {
         });
     };
 
+    renderFavorited = (favoritedChatRoom) => (
+        favoritedChatRoom.length > 0 && favoritedChatRoom.map(favorited => 
+            (<li 
+            key={favorited.id}
+            >
+                {favorited.name}
+            </li>)
+            )
+        );
+
     render() {
-        
+        const { favoritedChatRoom } = this.state;
         return (
-            <div>
-                favorited
+            
+            <div className="sideFavorited">
+                <div className="title">
+                    <HiOutlineChevronDown size="1.2rem"/>
+                    <span>Favorite Rooms</span>
+                </div>
+                <ul className="favoriteList">
+                    {this.renderFavorited(favoritedChatRoom)}
+                </ul>
             </div>
         );
     }
