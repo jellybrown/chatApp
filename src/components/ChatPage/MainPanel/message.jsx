@@ -13,8 +13,16 @@ const Message = ({message, user}) => {
         return message.hasOwnProperty("image") && !message.hasOwnProperty("content");
     }
 
+    const isMessageMine = (message, user) => {
+      if(user) {
+      return message.user.id === user.uid
+      }
+    }
+
     return (
-        <Media className="messageList">
+      <div >
+        <Media className="messageList"
+        style={{background: isMessageMine(message,user) && '#ddd'}}>
           <img
             width={44}
             height={44}
@@ -36,6 +44,7 @@ const Message = ({message, user}) => {
             }   
           </Media.Body>
         </Media>
+        </div>
     );
 };
 

@@ -31,10 +31,15 @@
 
 /* message */
 .messageList {
+  width: 100%;
   margin-bottom: 1.2em;
+  padding: 1em;
 }
 .messageList .mr-3 {
   border-radius: 50%;
+}
+.message.media-body {
+  display: inline-block;
 }
 .message .author {
   font-weight: bold;
