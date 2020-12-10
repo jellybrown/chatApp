@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Container  from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -9,11 +9,16 @@ import Card from 'react-bootstrap/Card';
 import { AiOutlineSearch } from 'react-icons/ai';
 import './mainStyles.css';
 import { useSelector } from 'react-redux';
+import { AiOutlineStar, AiFillStar } from 'react-icons/ai';
+import firebase from '../../../firebase';
 
 const MessageHeader = ({handleSearchChange}) => {
 
+    const [isFavorited, setFavorited] = useState(false);
     const chatRoom = useSelector(state => state.chatRoom.currentChatRoom);
-    
+    const user = useSelector(state => state.user.currentUser);
+    const isPravateRoom = useSelector(state => state.chatRoom.isPravateRoom);
+
 
     return (
         <div className="messageHeader">
@@ -23,7 +28,16 @@ const MessageHeader = ({handleSearchChange}) => {
                 padding: '1em 2em 0 2em'
                 }}>
         <Row style={{marginBottom: '1em' }}>
-            <Col sm={8} style={{ fontSize: '2rem'}}>{chatRoom && chatRoom.name}</Col>
+            <Col sm={8} style={{ fontSize: '2rem'}}>
+                {chatRoom && chatRoom.name}
+               
+                {!isPravateRoom && 
+                <span onClick={handleFavorite} style={{cursor:'pointer', marginLeft: '1.1em'}}>
+                    {isFavorited ? <AiOutlineStar /> : <AiFillStar />}
+                </span>
+                }
+                
+            </Col>
             <Col sm={4} style={{ display: 'flex', alignItems: 'center', justifyContent:'center'}}>
                 <InputGroup.Prepend style={{
                     alignSelf: 'stretch',
