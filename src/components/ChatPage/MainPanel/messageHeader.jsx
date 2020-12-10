@@ -18,7 +18,30 @@ const MessageHeader = ({handleSearchChange}) => {
     const chatRoom = useSelector(state => state.chatRoom.currentChatRoom);
     const user = useSelector(state => state.user.currentUser);
     const isPravateRoom = useSelector(state => state.chatRoom.isPravateRoom);
+    const userRef = firebase.database().ref("users");
 
+    const handleFavorite = () => {
+        
+        if(isFavorited) {
+            userRef.child(`${user.uid}/favorited`)
+            .child(chatRoom.id)
+            .remove(err => {
+                console.log(err);
+            });
+            setFavorited(isFavorited => !isFavorited);
+        } else {
+            userRef.child(`${user.uid}/favorited`).update({
+                [chatRoom.id] : {
+                    name: chatRoom.name,
+                    description: chatRoom.description,
+                    createdBy: {
+                        name: chatRoom.createdBy.name,
+                        image: chatRoom.createdBy.image
+                    }
+                }
+            });
+            setFavorited(isFavorited => !isFavorited);
+    }
 
     return (
         <div className="messageHeader">
@@ -33,7 +56,7 @@ const MessageHeader = ({handleSearchChange}) => {
                
                 {!isPravateRoom && 
                 <span onClick={handleFavorite} style={{cursor:'pointer', marginLeft: '1.1em'}}>
-                    {isFavorited ? <AiOutlineStar /> : <AiFillStar />}
+                    {!isFavorited ? <AiOutlineStar /> : <AiFillStar />}
                 </span>
                 }
                 
