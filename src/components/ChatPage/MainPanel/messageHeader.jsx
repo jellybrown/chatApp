@@ -6,6 +6,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
+import Image from 'react-bootstrap/Image';
 import { AiOutlineSearch } from 'react-icons/ai';
 import './mainStyles.css';
 import { useSelector } from 'react-redux';
@@ -102,10 +103,10 @@ const MessageHeader = ({handleSearchChange}) => {
             <Accordion>
             <Card>
                 <Accordion.Toggle as={Card.Header} eventKey="0">
-                Click me!
+                Description
                 </Accordion.Toggle>
                 <Accordion.Collapse eventKey="0">
-                <Card.Body>Hello! I'm the body</Card.Body>
+                <Card.Body>{chatRoom && chatRoom.description}</Card.Body>
                 </Accordion.Collapse>
             </Card>
             </Accordion>
@@ -123,7 +124,9 @@ const MessageHeader = ({handleSearchChange}) => {
             </Accordion>
             </Col>
             <Col sm style={{paddingTop: '0.5rem'}}>
-            방장
+                <Image src={chatRoom && chatRoom.createdBy.image} 
+                roundedCircle style={{width: '30px', height:'30px'}}/>
+                <span>{chatRoom && chatRoom.createdBy.name}</span>
             </Col>
         </Row>
         </Container>
