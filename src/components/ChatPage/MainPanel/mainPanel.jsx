@@ -4,6 +4,7 @@ import MessageHeader from './messageHeader';
 import firebase from '../../../firebase';
 import {connect} from 'react-redux';
 import Message from './message';
+import { setUserPosts } from '../../../redux/actions/chatRoom_action';
 
 
 class MainPanel extends Component {

@@ -1,4 +1,8 @@
-import { SET_CURRENT_ROOM, SET_PRIVATE_ROOM } from '../actions/type';
+import {
+  SET_CURRENT_ROOM,
+  SET_PRIVATE_ROOM,
+  SET_USER_POSTS,
+} from '../actions/type';
 
 const initialState = {
   currentChatRoom: null,
@@ -16,6 +20,11 @@ export default function chatRoom(state = initialState, action) {
       return {
         ...state,
         isPrivateRoom: action.payload,
+      };
+    case SET_USER_POSTS:
+      return {
+        ...state,
+        userPosts: action.payload,
       };
     default:
       return state;
