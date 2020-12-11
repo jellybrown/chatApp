@@ -7,6 +7,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
+import Media from 'react-bootstrap/Media';
 import { AiOutlineSearch } from 'react-icons/ai';
 import './mainStyles.css';
 import { useSelector } from 'react-redux';
@@ -19,8 +20,9 @@ const MessageHeader = ({handleSearchChange}) => {
     const chatRoom = useSelector(state => state.chatRoom.currentChatRoom);
     const user = useSelector(state => state.user.currentUser);
     const isPravateRoom = useSelector(state => state.chatRoom.isPravateRoom);
+    const userPosts = useSelector(state => state.chatRoom.userPosts);
     const userRef = firebase.database().ref("users");
-
+    
     useEffect(() => {
         if(chatRoom && user) {
         addFavoriteListener(chatRoom.id, user.uid);
@@ -62,8 +64,34 @@ const MessageHeader = ({handleSearchChange}) => {
                 }
             });
             setFavorited(isFavorited => !isFavorited);
+       }
     }
-}
+    const renderUserPosts = (userPosts) => 
+        
+            Object.entries(userPosts)
+            .sort((a,b) => b[1].count - a[1].count)
+            .map(([key,val], i) => (
+                <li key={isFavorited}
+                style={{listStyle: 'none', padding: '0.5em 0'}}>
+                    <Media>
+                    <img 
+                        width={40}
+                        height={40}
+                        className="mr-3"
+                        src={val.image}
+                        alt={val.name}
+                    />
+                    <Media.Body style={{ fontSize: '0.8rem'}}>
+                        <h6>{key}</h6>
+                        <span>
+                            {val.count}개
+                        </span>
+                    </Media.Body>
+                    </Media>
+                </li>
+            ))
+        
+            
     return (
         <div className="messageHeader">
         <Container 
@@ -115,10 +143,14 @@ const MessageHeader = ({handleSearchChange}) => {
             <Accordion>
             <Card>
                 <Accordion.Toggle as={Card.Header} eventKey="0">
-                Click me!
+                User Message
                 </Accordion.Toggle>
                 <Accordion.Collapse eventKey="0">
-                <Card.Body>Hello! I'm the body</Card.Body>
+                <Card.Body>
+                    <ul
+                        style={{padding: '0'}}
+                    >{userPosts && renderUserPosts(userPosts)}</ul>
+                </Card.Body>
                 </Accordion.Collapse>
             </Card>
             </Accordion>
