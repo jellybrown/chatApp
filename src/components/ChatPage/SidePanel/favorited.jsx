@@ -18,6 +18,16 @@ class Favorited extends Component {
         }
     };
 
+    componentWillUnmount() {
+        if(this.props.user) {
+            this.removeListener(this.props.user.uid);
+        }
+    };
+
+    removeListener = (userId) => {
+        this.state.userRef.child(`${userId}/favorited`).off();
+    }
+
     addListener = (userId) => {
         const {userRef} = this.state;
 
