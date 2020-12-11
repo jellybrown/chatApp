@@ -35,9 +35,23 @@ class MainPanel extends Component {
                 messagesLoading: false });
             
         });
-        
+        this.userPostCount(messageArray);
         
     };
+    userPostCount = (messages) => {
+        let userPosts = messages.reduce((acc, message) => {
+            if(message.user.name in acc) {
+                acc[message.user.name].count += 1;
+            } else {
+                acc[message.user.name] = {
+                    image: message.user.image,
+                    count: 1
+                }
+            }
+            return acc;
+        }, {});
+        this.props.dispatch(setUserPosts(userPosts));
+    }
 
     renderMessage = (messages) => 
         messages.length > 0 &&
