@@ -11,10 +11,12 @@ class MainPanel extends Component {
     state = {
         messages:[],
         messagesRef :firebase.database().ref('messages'),
+        typingRef: firebase.database().ref('typing'),
         messagesLoading: true,
         searchTerm: "",
         searchResults: [],
-        searchLoading: false
+        searchLoading: false,
+        typingUsers: []
 
     };
 
@@ -23,8 +25,29 @@ class MainPanel extends Component {
 
         if(chatRoom) {
             this.addMessagesListener(chatRoom.id);
+            this.addTypingListener(chatRoom.id);
         }   
      
+    };
+    addTypingListener = (chatRoomId) => {
+        let typingUsers = [];
+        this.state.typingRef.child(chatRoomId).on("child_added", DataSnapshot => {
+            if(DataSnapshot.key !== this.props.user.uid) {
+                typingUsers = typingUsers.concat({
+                    id: DataSnapshot.key,
+                    name: DataSnapshot.val()
+                });
+                this.setState({typingUsers: typingUsers});
+            }
+        });
+        this.state.typingRef.child(chatRoomId).on("child_removed", DataSnapshot => {
+            const index = typingUsers.findIndex(user => user.id === DataSnapshot.key);
+            if(index !== -1) {
+                typingUsers = typingUsers.filter(user => user.id !== DataSnapshot.key);
+                this.setState({typingUsers: typingUsers});
+            };
+
+        });
     };
     
     addMessagesListener = (chatRoomId) => {
