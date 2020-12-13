@@ -155,13 +155,9 @@ const MessageHeader = ({handleSearchChange}) => {
             </Card>
             </Accordion>
             </Col>
-            {!isPravateRoom &&
                 <Col sm style={{paddingTop: '0.5rem'}}>
-                <Image src={chatRoom && chatRoom.createdBy.image} 
-                roundedCircle style={{width: '30px', height:'30px'}}/>
-                <span>{chatRoom && chatRoom.createdBy.name}</span>
+                <span>방장</span>
                  </Col>
-            }
             
         </Row>
         </Container>
