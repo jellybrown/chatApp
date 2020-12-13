@@ -117,14 +117,21 @@ class MainPanel extends Component {
          
     };
 
+    renderTypingUsers = (typingUsers) => (
+        typingUsers.map(user => (
+            <span>{user.name}님이 채팅을 입력하고 있습니다...</span>
+        ))
+    );
+
     render() {
-        const { messages, searchTerm, searchResults } = this.state;
+        const { messages, searchTerm, searchResults, typingUsers } = this.state;
 
         return (
             <section className="mainPanel">
                 <MessageHeader handleSearchChange={this.handleSearchChange}/>
                 <div className="messages">
                     {searchTerm ? this.renderMessage(searchResults) : this.renderMessage(messages)}
+                    {typingUsers.length > 0 && this.renderTypingUsers(typingUsers)}
                 </div>
                 <MessageForm />
             </section>
