@@ -16,7 +16,8 @@ class MainPanel extends Component {
         searchTerm: "",
         searchResults: [],
         searchLoading: false,
-        typingUsers: []
+        typingUsers: [],
+        listenerLists: []
 
     };
 
@@ -27,8 +28,17 @@ class MainPanel extends Component {
             this.addMessagesListener(chatRoom.id);
             this.addTypingListener(chatRoom.id);
         }   
-     
     };
+
+    componentWillUnmount() {
+        this.removeListeners(this.state.listenerLists)
+    };
+    removeListeners = (listeners) => {
+        listeners.forEach(listener => {
+            listener.ref.child(listener.id).off(listener.event)
+        })
+    };
+
     addTypingListener = (chatRoomId) => {
         let typingUsers = [];
         this.state.typingRef.child(chatRoomId).on("child_added", DataSnapshot => {
@@ -40,6 +50,8 @@ class MainPanel extends Component {
                 this.setState({typingUsers: typingUsers});
             }
         });
+        this.addToListenerLists(chatRoomId, this.state.typingRef, "child_added");
+
         this.state.typingRef.child(chatRoomId).on("child_removed", DataSnapshot => {
             const index = typingUsers.findIndex(user => user.id === DataSnapshot.key);
             if(index !== -1) {
@@ -48,8 +60,27 @@ class MainPanel extends Component {
             };
 
         });
+        this.addToListenerLists(chatRoomId, this.state.typingRef, "child_removed");
+
     };
     
+    addToListenerLists = (id, ref, event) => {
+        const index = this.state.listenerLists.findIndex(listener => {
+            return (
+                listener.id === id &&
+                listener.ref === ref &&
+                listener.event === event
+            );
+        })
+
+        if(index === -1) {
+            const newListener = {id, ref, event};
+            this.setState({
+                listenerLists: this.state.listenerLists.concat(newListener)
+            });
+        }
+    };
+
     addMessagesListener = (chatRoomId) => {
         let messageArray = [];
         this.state.messagesRef.child(chatRoomId).on("child_added", DataSnapshot => {
