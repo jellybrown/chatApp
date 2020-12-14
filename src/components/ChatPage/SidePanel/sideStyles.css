@@ -1,6 +1,7 @@
 /* sidePanel */
 .sidePanel {
   height: 100vh;
+  overflow-y: scroll;
   padding: 1em 1.3em;
   display: flex;
   flex-direction: column;
