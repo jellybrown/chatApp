@@ -8,6 +8,8 @@ import { setUserPosts } from '../../../redux/actions/chatRoom_action';
 
 
 class MainPanel extends Component {
+    messageEnd = React.createRef();
+
     state = {
         messages:[],
         messagesRef :firebase.database().ref('messages'),
@@ -19,6 +21,11 @@ class MainPanel extends Component {
         typingUsers: [],
         listenerLists: []
 
+    };
+    componentDidUpdate() {
+        if(this.messageEnd) {
+            this.messageEnd.scrollIntoView({behavior: "smooth"});
+        }
     };
 
     componentDidMount() {
@@ -163,6 +170,7 @@ class MainPanel extends Component {
                 <div className="messages">
                     {searchTerm ? this.renderMessage(searchResults) : this.renderMessage(messages)}
                     {typingUsers.length > 0 && this.renderTypingUsers(typingUsers)}
+                    <div ref={this.messageEnd}/>
                 </div>
                 <MessageForm />
             </section>
