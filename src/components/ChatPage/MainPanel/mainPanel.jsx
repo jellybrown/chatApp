@@ -5,6 +5,7 @@ import firebase from '../../../firebase';
 import {connect} from 'react-redux';
 import Message from './message';
 import { setUserPosts } from '../../../redux/actions/chatRoom_action';
+import Skeleton from '../../../commons/components/skeleton';
 
 
 class MainPanel extends Component {
@@ -161,16 +162,24 @@ class MainPanel extends Component {
         ))
     );
 
+    renderSkeleton = () => (
+        <>
+        {[...Array(7)].map((v,i) => (
+            <Skeleton key={i}/>
+        ))}
+        </>
+    )
     render() {
-        const { messages, searchTerm, searchResults, typingUsers } = this.state;
+        const { messages, searchTerm, searchResults, typingUsers, messagesLoading } = this.state;
 
         return (
             <section className="mainPanel">
                 <MessageHeader handleSearchChange={this.handleSearchChange}/>
                 <div className="messages">
+                    {messagesLoading && this.renderSkeleton()}
                     {searchTerm ? this.renderMessage(searchResults) : this.renderMessage(messages)}
                     {typingUsers.length > 0 && this.renderTypingUsers(typingUsers)}
-                    <div ref={this.messageEnd}/>
+                    <div ref={node => this.messageEnd = node}/>
                 </div>
                 <MessageForm />
             </section>
